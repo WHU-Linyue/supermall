@@ -121,7 +121,10 @@
   import NavBar from "components/common/navbar/NavBar"
   import TabControl from "components/content/tabcontrol/TabControl"
 
-  import {getHomeMultidata} from "network/home";
+  import {
+    getHomeMultidata,
+    getHomeGoods
+  } from "network/home";
 
 
   export default {
@@ -136,15 +139,33 @@
     data() {
       return {
         banners: [],
-        recommends: []
+        recommends: [],
+        goods: {
+          'pop': {page: 0, list: []},
+          'new': {page: 0, list: []},
+          'sell': {page: 0, list: []}
+        }
       }
     },
     created() {
-      getHomeMultidata().then(res => {
-        // this.result = res;
-        this.banners = res.data.banner.list
-        this.recommends = res.data.recommend.list
-      })
+      this.getHomeMultidata();
+
+      this.getHomeGoods('pop');
+    },
+    methods: {
+      getHomeMultidata() {
+        getHomeMultidata().then(res => {
+          // this.result = res;
+          this.banners = res.data.banner.list;
+          this.recommends = res.data.recommend.list
+        });
+      },
+      getHomeGoods(type) {
+        const page = this.goods[type].page + 1;
+        getHomeGoods(type, page).then(res => {
+          
+        });
+      }
     }
   }
 </script>
